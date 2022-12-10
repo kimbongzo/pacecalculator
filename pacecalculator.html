@@ -1,415 +1,625 @@
 <!DOCTYPE html>
 <html lang="en">
-<head>
-  <meta charset="UTF-8">
-  <meta http-equiv="X-UA-Compatible" content="IE=edge">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Marathon Pace Calculator</title>
-    <meta name="keywords" content="계산기">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="keywords" content="마라톤, 페이스, 계산기" />
+    <title>Marathon Pace Calculator</title>
+  </head>
 
-    <script language="JavaScript">// Hide from old browsers
+  <script language="JavaScript">
+    // Hide from old browsers
     var ratio = 1.609344;
-    var str = null; 
-    var x = 1; 
+    var str = null;
+    var x = 1;
     var answer = 0;
-    
-    function calc(output,num){
-      if (num == 0){
+
+    function calc(output, num) {
+      if (num == 0) {
         dist = eval(document.inbox.distance.value);
         hours = eval(document.inbox.hrs.value);
         minutes = eval(document.inbox.min.value);
         seconds = eval(document.inbox.sec.value);
-        time = hours*60 + minutes + seconds/60;
-        units = document.inbox.units.options[document.inbox.units.selectedIndex].value;
-        if (units == "miles"){
-           miles = dist;
-           kilometers = ratio*miles;
+        time = hours * 60 + minutes + seconds / 60;
+        units =
+          document.inbox.units.options[document.inbox.units.selectedIndex]
+            .value;
+        if (units == "miles") {
+          miles = dist;
+          kilometers = ratio * miles;
+        } else if (units == "kilometers") {
+          kilometers = dist;
+          miles = kilometers / ratio;
+        } else if (units == "meters") {
+          kilometers = dist / 1000;
+          miles = kilometers / ratio;
+        } else {
+          miles = dist / 1760;
+          kilometers = ratio * miles;
         }
-        else if (units == "kilometers"){ 
-           kilometers = dist;
-           miles = kilometers/ratio;
-        }
-        else if (units == "meters"){
-           kilometers = dist/1000;
-           miles = kilometers/ratio;
-        }
-        else{
-           miles = dist/1760;
-           kilometers = ratio*miles;
-        }
-      }
-      else if (num == 1){
+      } else if (num == 1) {
         mintemp = eval(document.output.minmile.value);
         sectemp = eval(document.output.secmile.value);
-        time = mintemp + sectemp/60;
+        time = mintemp + sectemp / 60;
         miles = 1;
         kilometers = ratio;
-      }
-      else if (num == 2){
+      } else if (num == 2) {
         mintemp = eval(document.output.minkm.value);
         sectemp = eval(document.output.seckm.value);
-        time = mintemp + sectemp/60;
+        time = mintemp + sectemp / 60;
         kilometers = 1;
-        miles = 1/ratio;
-      }
-      else if (num == 3){
+        miles = 1 / ratio;
+      } else if (num == 3) {
         temp = eval(document.output.mph.value);
         miles = temp;
-        kilometers = miles*ratio; 
+        kilometers = miles * ratio;
         time = 60;
-      }
-      else if (num == 4){
+      } else if (num == 4) {
         temp = eval(document.output.kph.value);
         kilometers = temp;
-        miles = kilometers/ratio;
+        miles = kilometers / ratio;
         time = 60;
-      }
-      else if (num == 5){
+      } else if (num == 5) {
         temp = eval(document.output.mps.value);
-        kilometers = temp/1000;
-        miles = kilometers/ratio;
-        time = 1/60;
-      } 
+        kilometers = temp / 1000;
+        miles = kilometers / ratio;
+        time = 1 / 60;
+      }
       writePace("miles", miles);
       writePace("kilometers", kilometers);
-      round(100*miles*60/time);
-      document.output.mph.value = answer/100;
-      round(100*kilometers*60/time);
-      document.output.kph.value = answer/100; 
-      round(100*kilometers*1000/time/60);
-      document.output.mps.value = answer/100;
+      round((100 * miles * 60) / time);
+      document.output.mph.value = answer / 100;
+      round((100 * kilometers * 60) / time);
+      document.output.kph.value = answer / 100;
+      round((100 * kilometers * 1000) / time / 60);
+      document.output.mps.value = answer / 100;
     }
-    
-    function writePace(str, dis){
-      if (str == "miles"){
+
+    function writePace(str, dis) {
+      if (str == "miles") {
         minwin = document.output.minmile;
         secwin = document.output.secmile;
-        num = time/dis;
-      }
-      else{
+        num = time / dis;
+      } else {
         minwin = document.output.minkm;
         secwin = document.output.seckm;
-        num = time/dis;
+        num = time / dis;
       }
       var i = 0;
       var j = 1;
       var go = 1;
-      while (go == 1){
-        if ((i<=num)&(j>num)){
+      while (go == 1) {
+        if ((i <= num) & (j > num)) {
           minwin.value = i;
-          j = 60*(num - i);
+          j = 60 * (num - i);
           round(j);
-          if (answer == 60){
-          minwin.value = i+1;
-              secwin.value = "00";
-          }
-          else if (answer == 0){
+          if (answer == 60) {
+            minwin.value = i + 1;
             secwin.value = "00";
-          }
-          else if (answer<10){
-            secwin.value = "0"+answer;
-          }
-          else{
-        secwin.value = answer;
+          } else if (answer == 0) {
+            secwin.value = "00";
+          } else if (answer < 10) {
+            secwin.value = "0" + answer;
+          } else {
+            secwin.value = answer;
           }
           go = 0;
-        }
-        else{
+        } else {
           i++;
           j++;
         }
       } //end of while loop
     } //end of fxn
-    
-    function round(num){
+
+    function round(num) {
       m = 0;
       n = 1;
       answer = -1;
-      while (answer == -1){
-        if ((m<=num)&(n>num)){
-          if ((num + .5) >= n){
-              answer = n;
+      while (answer == -1) {
+        if ((m <= num) & (n > num)) {
+          if (num + 0.5 >= n) {
+            answer = n;
+          } else {
+            answer = m;
           }
-           else{
-              answer = m;
-          }
-        }
-        else{
+        } else {
           m++;
           n++;
         }
       }
     }
-      
-    
-    function record(num){
-      x=num;
+
+    function record(num) {
+      x = num;
     }
+
+    //Here My function
+
+    function getfullhalf(event) {
+      document.getElementById("fullhalfresult").innerText = event.target.value;
+    }
+    function getkmmile(event) {
+      document.getElementById("kmmile").innerText = event.target.value;
+    }
+
+    function fullhalftimechange() {
+      let sigan = document.getElementById("si").value;
+      console.log(sigan);
+      let boon = document.getElementById("boon").value;
+      console.log(boon);
+      let cho = document.getElementById("cho").value;
+      console.log(cho);
+
+      let pace = parseFloat(
+        (document.getElementById("fullhalfresult").innerText =
+          event.target.value)
+      );
+
+      if(document.getElementById("fullcourse").checked == true)
+
+      if(document.getElementById("halfcourse").checked == true)
+
+
+    }
+
     // Stop hiding from old browsers -->
-    </script>
-    
-    <body>
-        
-    <table width="400" bgcolor"#ccccff"="" border="0" cellpadding="0" cellspacing="0">
-                
-                
-                <tbody><tr>
-                    <td width="400" bgcolor"#ccccff"="" colspan="2" valign="top" align="center">
-        
-                    
-                    <table width="400" bgcolor="#CCCCFF" border="0" cellpadding="7" cellspacing="0"> 
-                    
-                        <tbody><tr>
-                            <td width="30">&nbsp;</td>
-                            <td valign="top" align="center" bgcolor="#CCCCFF">
-    
-    <p><span class="t1"><font size="+1"><b>거리, 시간, 페이스, 속도 상호환산기</b></font>
-    
-    </span></p><p>
-      새로 시작합니다. 아래의 계산기는 두가지 기능을 가지고 있다.<br>
-    1) 먼저 달린 거리와 기록(시간)을 입력하면 페이스, 속도(시속, 초속)가 산출된다.  
-    </p><p>2)아래의 출력부분에서는 페이스를 속도(시속)로, 속도를 페이스로 전환이 가능하다. (트레드밀에서 속도를 페이스로 환산가능)<br>
-    
-    </p><form name="inbox">
-    <b>달린 거리</b>  <select name="distance" size="1">
-    <option value="0" selected="">선택
-    </option><option value="1">1
-    </option><option value="2">2
-    </option><option value="3">3
-    </option><option value="4">4
-    </option><option value="5">5
-    </option><option value="6">6
-    </option><option value="7">7
-    </option><option value="8">8
-    </option><option value="9">9
-    </option><option value="10">10
-    </option><option value="11">11
-    </option><option value="12">12
-    </option><option value="13">13
-    </option><option value="14">14
-    </option><option value="15">15
-    </option><option value="16">16
-    </option><option value="17">17
-    </option><option value="18">18
-    </option><option value="19">19
-    </option><option value="20">20
-    </option><option value="21">21
-    </option><option value="21.0975">하프
-    </option><option value="22">22
-    </option><option value="23">23
-    </option><option value="24">24
-    </option><option value="25">25
-    </option><option value="26">26
-    </option><option value="27">27
-    </option><option value="28">28
-    </option><option value="29">29
-    </option><option value="30">30
-    </option><option value="31">31
-    </option><option value="32">32
-    </option><option value="33">33
-    </option><option value="34">34
-    </option><option value="35">35
-    </option><option value="36">36
-    </option><option value="37">37
-    </option><option value="38">38
-    </option><option value="39">39
-    </option><option value="40">40
-    </option><option value="41">41
-    </option><option value="42">42
-    </option><option value="42.195">마라톤
-    </option><option value="43">43
-    </option><option value="44">44
-    </option><option value="45">45
-    </option><option value="46">46
-    </option><option value="47">47
-    </option><option value="48">48
-    </option><option value="49">49
-    </option><option value="50">50
-    </option><option value="100">100
-    </option><option value="200">200
-    </option><option value="400">400
-    </option></select>
-    <select name="units" size="1">
-    <option value="kilometers" selected="">km
-    </option><option value="meters">m
-    
-    </option></select>
-    <p><b>소요시간</b> : <select name="hrs" size="1">
-    <option value="0" selected="">0
-    </option><option value="1">1
-    </option><option value="2">2
-    </option><option value="3">3
-    </option><option value="4">4
-    </option><option value="5">5
-    </option><option value="6">6
-    </option><option value="7">7
-    </option><option value="8">8
-    </option></select>
-    시간  <select name="min" size="1">
-    <option value="0" selected="">00
-    </option><option value="1">01
-    </option><option value="2">02
-    </option><option value="3">03
-    </option><option value="4">04
-    </option><option value="5">05
-    </option><option value="6">06
-    </option><option value="7">07
-    </option><option value="8">08
-    </option><option value="9">09
-    </option><option value="10">10
-    </option><option value="11">11
-    </option><option value="12">12
-    </option><option value="13">13
-    </option><option value="14">14
-    </option><option value="15">15
-    </option><option value="16">16
-    </option><option value="17">17
-    </option><option value="18">18
-    </option><option value="19">19
-    </option><option value="20">20
-    </option><option value="21">21
-    </option><option value="22">22
-    </option><option value="23">23
-    </option><option value="24">24
-    </option><option value="25">25
-    </option><option value="26">26
-    </option><option value="27">27
-    </option><option value="28">28
-    </option><option value="29">29
-    </option><option value="30">30
-    </option><option value="31">31
-    </option><option value="32">32
-    </option><option value="33">33
-    </option><option value="34">34
-    </option><option value="35">35
-    </option><option value="36">36
-    </option><option value="37">37
-    </option><option value="38">38
-    </option><option value="39">39
-    </option><option value="40">40
-    </option><option value="41">41
-    </option><option value="42">42
-    </option><option value="43">43
-    </option><option value="44">44
-    </option><option value="45">45
-    </option><option value="46">46
-    </option><option value="47">47
-    </option><option value="48">48
-    </option><option value="49">49
-    </option><option value="50">50
-    </option><option value="51">51
-    </option><option value="52">52
-    </option><option value="53">53
-    </option><option value="54">54
-    </option><option value="55">55
-    </option><option value="56">56
-    </option><option value="57">57
-    </option><option value="58">58
-    </option><option value="59">59
-    </option></select>
-    분 <select name="sec" size="1">
-    <option value="0" selected="">00
-    </option><option value="1">01
-    </option><option value="2">02
-    </option><option value="3">03
-    </option><option value="4">04
-    </option><option value="5">05
-    </option><option value="6">06
-    </option><option value="7">07
-    </option><option value="8">08
-    </option><option value="9">09
-    </option><option value="10">10
-    </option><option value="11">11
-    </option><option value="12">12
-    </option><option value="13">13
-    </option><option value="14">14
-    </option><option value="15">15
-    </option><option value="16">16
-    </option><option value="17">17
-    </option><option value="18">18
-    </option><option value="19">19
-    </option><option value="20">20
-    </option><option value="21">21
-    </option><option value="22">22
-    </option><option value="23">23
-    </option><option value="24">24
-    </option><option value="25">25
-    </option><option value="26">26
-    </option><option value="27">27
-    </option><option value="28">28
-    </option><option value="29">29
-    </option><option value="30">30
-    </option><option value="31">31
-    </option><option value="32">32
-    </option><option value="33">33
-    </option><option value="34">34
-    </option><option value="35">35
-    </option><option value="36">36
-    </option><option value="37">37
-    </option><option value="38">38
-    </option><option value="39">39
-    </option><option value="40">40
-    </option><option value="41">41
-    </option><option value="42">42
-    </option><option value="43">43
-    </option><option value="44">44
-    </option><option value="45">45
-    </option><option value="46">46
-    </option><option value="47">47
-    </option><option value="48">48
-    </option><option value="49">49
-    </option><option value="50">50
-    </option><option value="51">51
-    </option><option value="52">52
-    </option><option value="53">53
-    </option><option value="54">54
-    </option><option value="55">55
-    </option><option value="56">56
-    </option><option value="57">57
-    </option><option value="58">58
-    </option><option value="59">59
-    </option></select>
-    초 </p>
-    <p><input type="BUTTON" name="ENTER" value="산출하기" onclick="calc(output,0)"> <input type="RESET" name="reset" value="다시하기"></p>
-    
-    </form><p><b><font face="Arial,Helvetica" color="#339933">출력 </font></b></p><form name="output">
-    <input type="hidden" name="minmile" size="2" value="0" onblur="record(1)"> <input type="hidden" name="secmile" size="2" value="0" onblur="record(1)">
-    페이스(km) : <input type="TEXT" name="minkm" size="2" value="0" onblur="record(2)"> : <input type="TEXT" name="seckm" size="2" value="0" onblur="record(2)"> /km
-    <input type="hidden" name="mph" size="5" value="0" onblur="record(3)"><br>
-    <p>시속(km) :<input type="TEXT" name="kph" size="5" value="0" onblur="record(4)"> km/h<br>
-    </p><p>초속(m) :<input type="TEXT" name="mps" size="5" value="0" onblur="record(5)"> m/s
-    
-    <br><br>
-    <input type="BUTTON" name="ENTER2" value="환산하기" onclick="calc(output,x)">
-    
-    <input type="RESET" name="reset" value="다시하기">
-    </p>
-    
-    </form> 
-    
-    <a href="#" onclick="window.close()">창닫기</a><br>
-        <font size="1">프로그램제작: Jeff Billing.</font>
-                </td>
-                        <td width="30">&nbsp;</td>	
-                        </tr>
-                    </tbody></table>
-                    
-                </td>
-            </tr>
-                
-            <tr>
-                <td colspan="2">
-                
-                    
-                    <table border="0" cellpadding="0" cellspacing="0">
-                    
-                    </table>
-                </td>
-            
-            </tr>
-        </tbody></table>
-    
-    
-     <div class="ue-sidebar-container"></div>
+  </script>
+
+  <body>
+    <form>
+      <p>달린 거리와 시간을 입력하여 PACE 출력</p>
+      <div>
+        <input
+          type="radio"
+          id="fullcourse"
+          name="fullhalf"
+          value="42.195"
+          checked
+          oninput="fullhalftimechange()"
+        />
+        <label for="fullcourse">42.195</label>
+        <input
+          type="radio"
+          id="halfcourse"
+          name="fullhalf"
+          value="21.0975"
+          oninput="fullhalftimechange()"
+        />
+        <label for="halfcourse">HALF </label>
+        <input
+          id="si"
+          type="number"
+          value="00"
+          min="0"
+          max="23"
+          style="width: 70px; height: 20px; font-size: 16px"
+          oninput="fullhalftimechange()"
+        />시간
+        <input
+          id="boon"
+          type="number"
+          value="00"
+          placeholder="분?"
+          min="0"
+          max="59"
+          style="width: 70px; height: 20px; font-size: 16px"
+          oninput="fullhalftimechange()"
+        />분
+        <input
+          id="cho"
+          type="number"
+          value="00"
+          placeholder="초"
+          min="0"
+          max="59"
+          style="width: 70px; height: 20px; font-size: 16px"
+          oninput="fullhalftimechange()"
+        />초
+      </div>
+
+      <div id="fullhalfresult"></div>
+
+      <!-- 값을 전부 가져와 계산 해서 보여주기 -->
+
+      Pace:
+
+      <div>
+        <input
+          type="number"
+          placeholder="거리?"
+          min="0"
+          max="100"
+          style="width: 70px; height: 20px; font-size: 16px"
+        />
+        <input
+          type="radio"
+          id="contactChoice1"
+          name="contact"
+          value="42.195"
+          onclick="getkmmile(event)"
+          checked
+        />KM
+
+        <input
+          type="radio"
+          id="contactChoice2"
+          name="contact"
+          value="miles"
+          onclick="getkmmile(event)"
+        />
+        MILE
+      </div>
+      <div id="kmmile"></div>
+
+      <div>
+        <button type="submit">Submit</button>
+      </div>
+    </form>
+
+    <!-- 계산-->
+
+    <table
+      width="400"
+      bgcolor="#ccccff"
+      border="0"
+      cellpadding="0"
+      cellspacing="0"
+    >
+      <tbody>
+        <tr>
+          <td
+            width="400"
+            bgcolor="#ccccff"
+            colspan="2"
+            valign="top"
+            align="center"
+          >
+            <table
+              width="400"
+              bgcolor="#CCCCFF"
+              border="0"
+              cellpadding="7"
+              cellspacing="0"
+            >
+              <tbody>
+                <tr>
+                  <td width="30">&nbsp;</td>
+                  <td valign="top" align="center" bgcolor="#CCCCFF">
+                    <p>
+                      <span class="t1"
+                        ><font size="+1"
+                          ><b>거리, 시간, 페이스, 속도 상호환산기</b></font
+                        >
+                      </span>
+                    </p>
+                    <p>
+                      새로 시작합니다. 아래의 계산기는 두가지 기능을 가지고
+                      있다.<br />
+                      1) 먼저 달린 거리와 기록(시간)을 입력하면 페이스,
+                      속도(시속, 초속)가 산출된다.
+                    </p>
+                    <p>
+                      2)아래의 출력부분에서는 페이스를 속도(시속)로, 속도를
+                      페이스로 전환이 가능하다. (트레드밀에서 속도를 페이스로
+                      환산가능)<br />
+                    </p>
+                    <form name="inbox">
+                      <b>달린 거리</b>
+                      <select name="distance" size="1">
+                        <option value="0" selected="">선택</option>
+                        <option value="1">1</option>
+                        <option value="2">2</option>
+                        <option value="3">3</option>
+                        <option value="4">4</option>
+                        <option value="5">5</option>
+                        <option value="6">6</option>
+                        <option value="7">7</option>
+                        <option value="8">8</option>
+                        <option value="9">9</option>
+                        <option value="10">10</option>
+                        <option value="11">11</option>
+                        <option value="12">12</option>
+                        <option value="13">13</option>
+                        <option value="14">14</option>
+                        <option value="15">15</option>
+                        <option value="16">16</option>
+                        <option value="17">17</option>
+                        <option value="18">18</option>
+                        <option value="19">19</option>
+                        <option value="20">20</option>
+                        <option value="21">21</option>
+                        <option value="21.0975">하프</option>
+                        <option value="22">22</option>
+                        <option value="23">23</option>
+                        <option value="24">24</option>
+                        <option value="25">25</option>
+                        <option value="26">26</option>
+                        <option value="27">27</option>
+                        <option value="28">28</option>
+                        <option value="29">29</option>
+                        <option value="30">30</option>
+                        <option value="31">31</option>
+                        <option value="32">32</option>
+                        <option value="33">33</option>
+                        <option value="34">34</option>
+                        <option value="35">35</option>
+                        <option value="36">36</option>
+                        <option value="37">37</option>
+                        <option value="38">38</option>
+                        <option value="39">39</option>
+                        <option value="40">40</option>
+                        <option value="41">41</option>
+                        <option value="42">42</option>
+                        <option value="42.195">풀코스</option>
+                        <option value="43">43</option>
+                        <option value="44">44</option>
+                        <option value="45">45</option>
+                        <option value="46">46</option>
+                        <option value="47">47</option>
+                        <option value="48">48</option>
+                        <option value="49">49</option>
+                        <option value="50">50</option>
+                        <option value="100">100</option>
+                        <option value="200">200</option>
+                        <option value="400">400</option>
+                      </select>
+
+                      <select name="units" size="1">
+                        <option value="kilometers" selected="">km</option>
+                        <option value="meters">miles</option>
+                        <option value="meters">m</option>
+                      </select>
+
+                      <p>
+                        <b>소요시간</b> :
+                        <select name="hrs" size="1">
+                          <option value="0" selected="">0</option>
+                          <option value="1">1</option>
+                          <option value="2">2</option>
+                          <option value="3">3</option>
+                          <option value="4">4</option>
+                          <option value="5">5</option>
+                          <option value="6">6</option>
+                          <option value="7">7</option>
+                          <option value="8">8</option>
+                        </select>
+                        시간
+                        <select name="min" size="1">
+                          <option value="0" selected="">00</option>
+                          <option value="1">01</option>
+                          <option value="2">02</option>
+                          <option value="3">03</option>
+                          <option value="4">04</option>
+                          <option value="5">05</option>
+                          <option value="6">06</option>
+                          <option value="7">07</option>
+                          <option value="8">08</option>
+                          <option value="9">09</option>
+                          <option value="10">10</option>
+                          <option value="11">11</option>
+                          <option value="12">12</option>
+                          <option value="13">13</option>
+                          <option value="14">14</option>
+                          <option value="15">15</option>
+                          <option value="16">16</option>
+                          <option value="17">17</option>
+                          <option value="18">18</option>
+                          <option value="19">19</option>
+                          <option value="20">20</option>
+                          <option value="21">21</option>
+                          <option value="22">22</option>
+                          <option value="23">23</option>
+                          <option value="24">24</option>
+                          <option value="25">25</option>
+                          <option value="26">26</option>
+                          <option value="27">27</option>
+                          <option value="28">28</option>
+                          <option value="29">29</option>
+                          <option value="30">30</option>
+                          <option value="31">31</option>
+                          <option value="32">32</option>
+                          <option value="33">33</option>
+                          <option value="34">34</option>
+                          <option value="35">35</option>
+                          <option value="36">36</option>
+                          <option value="37">37</option>
+                          <option value="38">38</option>
+                          <option value="39">39</option>
+                          <option value="40">40</option>
+                          <option value="41">41</option>
+                          <option value="42">42</option>
+                          <option value="43">43</option>
+                          <option value="44">44</option>
+                          <option value="45">45</option>
+                          <option value="46">46</option>
+                          <option value="47">47</option>
+                          <option value="48">48</option>
+                          <option value="49">49</option>
+                          <option value="50">50</option>
+                          <option value="51">51</option>
+                          <option value="52">52</option>
+                          <option value="53">53</option>
+                          <option value="54">54</option>
+                          <option value="55">55</option>
+                          <option value="56">56</option>
+                          <option value="57">57</option>
+                          <option value="58">58</option>
+                          <option value="59">59</option>
+                        </select>
+                        분
+                        <select name="sec" size="1">
+                          <option value="0" selected="">00</option>
+                          <option value="1">01</option>
+                          <option value="2">02</option>
+                          <option value="3">03</option>
+                          <option value="4">04</option>
+                          <option value="5">05</option>
+                          <option value="6">06</option>
+                          <option value="7">07</option>
+                          <option value="8">08</option>
+                          <option value="9">09</option>
+                          <option value="10">10</option>
+                          <option value="11">11</option>
+                          <option value="12">12</option>
+                          <option value="13">13</option>
+                          <option value="14">14</option>
+                          <option value="15">15</option>
+                          <option value="16">16</option>
+                          <option value="17">17</option>
+                          <option value="18">18</option>
+                          <option value="19">19</option>
+                          <option value="20">20</option>
+                          <option value="21">21</option>
+                          <option value="22">22</option>
+                          <option value="23">23</option>
+                          <option value="24">24</option>
+                          <option value="25">25</option>
+                          <option value="26">26</option>
+                          <option value="27">27</option>
+                          <option value="28">28</option>
+                          <option value="29">29</option>
+                          <option value="30">30</option>
+                          <option value="31">31</option>
+                          <option value="32">32</option>
+                          <option value="33">33</option>
+                          <option value="34">34</option>
+                          <option value="35">35</option>
+                          <option value="36">36</option>
+                          <option value="37">37</option>
+                          <option value="38">38</option>
+                          <option value="39">39</option>
+                          <option value="40">40</option>
+                          <option value="41">41</option>
+                          <option value="42">42</option>
+                          <option value="43">43</option>
+                          <option value="44">44</option>
+                          <option value="45">45</option>
+                          <option value="46">46</option>
+                          <option value="47">47</option>
+                          <option value="48">48</option>
+                          <option value="49">49</option>
+                          <option value="50">50</option>
+                          <option value="51">51</option>
+                          <option value="52">52</option>
+                          <option value="53">53</option>
+                          <option value="54">54</option>
+                          <option value="55">55</option>
+                          <option value="56">56</option>
+                          <option value="57">57</option>
+                          <option value="58">58</option>
+                          <option value="59">59</option>
+                        </select>
+                        초
+                      </p>
+                      <p>
+                        <input
+                          type="BUTTON"
+                          name="ENTER"
+                          value="산출하기"
+                          onclick="calc(output,0)"
+                        />
+                        <input type="RESET" name="reset" value="다시하기" />
+                      </p>
+                    </form>
+                    <p>
+                      <b
+                        ><font face="Arial,Helvetica" color="#339933"
+                          >출력
+                        </font></b
+                      >
+                    </p>
+                    <form name="output">
+                      <input
+                        type="hidden"
+                        name="minmile"
+                        size="2"
+                        value="0"
+                        onblur="record(1)"
+                      />
+                      <input
+                        type="hidden"
+                        name="secmile"
+                        size="2"
+                        value="0"
+                        onblur="record(1)"
+                      />
+                      페이스(km) :
+                      <input
+                        type="TEXT"
+                        name="minkm"
+                        size="2"
+                        value="0"
+                        onblur="record(2)"
+                      />
+                      :
+                      <input
+                        type="TEXT"
+                        name="seckm"
+                        size="2"
+                        value="0"
+                        onblur="record(2)"
+                      />
+                      /km
+                      <input
+                        type="hidden"
+                        name="mph"
+                        size="5"
+                        value="0"
+                        onblur="record(3)"
+                      /><br />
+                      <p>
+                        시속(km) :
+                        <input
+                          type="TEXT"
+                          name="kph"
+                          size="5"
+                          value="0"
+                          onblur="record(4)"
+                        />
+                        km/h<br />
+                      </p>
+                      <p>
+                        초속(m) :
+                        <input
+                          type="TEXT"
+                          name="mps"
+                          size="5"
+                          value="0"
+                          onblur="record(5)"
+                        />
+                        m/s
+
+                        <br /><br />
+                        <input
+                          type="BUTTON"
+                          name="ENTER2"
+                          value="환산하기"
+                          onclick="calc(output,x)"
+                        />
+
+                        <input type="RESET" name="reset" value="다시하기" />
+                      </p>
+                    </form>
+
+                    <a href="#" onclick="window.close()">창닫기</a><br />
+                    <font size="1">프로그램제작: Jeff Billing.</font>
+                  </td>
+                  <td width="30">&nbsp;</td>
+                </tr>
+              </tbody>
+            </table>
+          </td>
+        </tr>
+
+        <tr>
+          <td colspan="2">
+            <table border="0" cellpadding="0" cellspacing="0"></table>
+          </td>
+        </tr>
+      </tbody>
+    </table>
+
+    <div class="ue-sidebar-container"></div>
   </body>
 </html>
